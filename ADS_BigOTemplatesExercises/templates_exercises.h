@@ -21,6 +21,14 @@ void ads_print(list<E> list) {
 	}
 }
 
+template <typename Iter>
+void ads_print(Iter iter, Iter end) {
+	while (iter != end) {
+		cout << *iter << endl;
+		iter++;
+	}
+}
+
 //templates - exercise 6
 template <typename T>
 int binarySearch(T* list, int size, T target)
