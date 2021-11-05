@@ -11,6 +11,7 @@
 #include "templates_exercises.h"
 #include "ADS_Array.h"
 #include "GenericPair.h"
+#include "GenericArray.h"
 
 using namespace std;
 
@@ -118,8 +119,16 @@ void templates_exercise3()
 	ads_print(fruitList);
 }
 
-enum class ESubscriptionType
-{
+
+///@brief demo defining an unscoped enum (i.e. an enum where enumerators (e.g. Daily) are globally visible)
+///@see https://www.walletfox.com/course/darkercornerscpp_scopedenum.php
+enum EPaymentType {
+	Yearly, Monthly, Weekly, Daily
+};
+
+///@brief demo defining a scoped enum (i.e. an enum where enumerators (e.g. Gold) are not globally visible)
+///@see https://www.walletfox.com/course/darkercornerscpp_scopedenum.php
+enum class ESubscriptionType {
 	Platinum, Gold, Silver
 };
 
@@ -128,6 +137,28 @@ struct Account
 	string name;
 	double subscription;
 	ESubscriptionType subType;
+
+	//DONE - implement the << and < and >= operators
+	friend ostream& operator<<(ostream& os, const Account& rhs) {
+		os << rhs.name << "," 
+			<< rhs.subscription << "," 
+			<< static_cast<int>(rhs.subType);
+			//<< (int)rhs.subType; don't do this
+			//does NOT throw a cathcable exception
+
+			return os;
+	}
+
+	bool operator >=(const Account& rhs)
+	{
+		return this->subscription >= rhs.subscription
+			&& this->subType >= rhs.subType;
+	}
+
+	bool operator <(const Account& rhs)
+	{
+		return !(*this >= rhs);
+	}
 };
 
 /**
@@ -143,7 +174,7 @@ void templates_exercise4()
 	Account acc1;
 	acc1.name = "Jane Bloggs";
 	acc1.subscription = 14.99;
-	acc1.subType = ESubscriptionType::Platinum;
+	acc1.subType = ESubscriptionType::Silver;
 
 	GenericPair<int, Account> gp2(12345, acc1);
 
@@ -151,25 +182,32 @@ void templates_exercise4()
 }
 
 /// @brief Create a template Array class, which implements a dynamic array
+//void templates_exercise5()
+//{
+//	//an array of strings
+//	ADS_Array<string> arr1(5, "default value");
+//	arr1.print();
+//
+//	//an array of integers
+//	ADS_Array<int> arr2(5, -1);
+//
+//	//adding some values
+//	arr2.add(2, 0);
+//	arr2.add(4, 1);
+//	arr2.add(8, 2);
+//	arr2.add(16, 3);
+//	//arr2.add(32, 4); //leave the last element free to see how print deals with an uninitialized value
+//
+//	//calling the print
+//	arr2.print();
+//
+//	//accessing a value
+//	cout << arr2.get(3) << endl;
+//}
+
 void templates_exercise5()
 {
 	//an array of strings
-	ADS_Array<string> arr1(5, "default value");
-	arr1.print();
-
-	//an array of integers
-	ADS_Array<int> arr2(5, -1);
-
-	//adding some values
-	arr2.add(2, 0);
-	arr2.add(4, 1);
-	arr2.add(8, 2);
-	arr2.add(16, 3);
-	//arr2.add(32, 4); //leave the last element free to see how print deals with an uninitialized value
-
-	//calling the print
-	arr2.print();
-
-	//accessing a value
-	cout << arr2.get(3) << endl;
+	GenericArray strArray(5, 999);
+	strArray.print();
 }
